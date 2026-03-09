@@ -49,7 +49,7 @@ function App() {
     window.history.pushState({}, '', nextUrl)
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const prompt = sanitizePrompt(draftPrompt)
 
     if (!prompt) {
@@ -57,11 +57,19 @@ function App() {
       return
     }
 
+    const shareUrl = buildShareUrl(prompt, window.location.origin)
+
     setDraftPrompt(prompt)
     setActivePrompt(prompt)
     setPageMode('share')
     syncPromptToUrl(prompt)
-    toast.success('Share link ready.')
+
+    try {
+      await navigator.clipboard.writeText(shareUrl)
+      toast.success('Share link copied to clipboard.')
+    } catch {
+      toast.success('Share link ready.')
+    }
   }
 
   const handleEdit = () => {
