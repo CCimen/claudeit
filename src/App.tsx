@@ -125,32 +125,34 @@ function App() {
         id="main-content"
       >
         <section className="mx-auto flex w-full max-w-5xl flex-1 flex-col items-center pt-8 text-center sm:pt-12 xl:pt-14">
-          <div className="mx-auto mb-8 flex max-w-3xl flex-col items-center gap-4 sm:mb-10">
-            <div className="animate-rise flex flex-col items-center gap-4">
-              <div className="animate-ornament flex size-16 items-center justify-center rounded-full border border-primary/20 bg-primary/10 text-primary shadow-[0_14px_40px_rgba(198,100,66,0.18)]">
-                <StarburstIcon className="size-8" />
+          {pageMode !== 'playback' && (
+            <div className="mx-auto mb-8 flex max-w-3xl flex-col items-center gap-4 sm:mb-10">
+              <div className="animate-rise flex flex-col items-center gap-4">
+                <div className="animate-ornament flex size-16 items-center justify-center rounded-full border border-primary/20 bg-primary/10 text-primary shadow-[0_14px_40px_rgba(198,100,66,0.18)]">
+                  <StarburstIcon className="size-8" />
+                </div>
+                <div className="space-y-3">
+                  <h1 className="text-balance font-display text-4xl leading-[0.92] font-semibold tracking-[-0.035em] text-foreground sm:text-5xl md:text-6xl lg:text-7xl">
+                    Let me Claude it for you
+                  </h1>
+                  <p className="mx-auto max-w-xl text-base leading-7 text-muted-foreground sm:text-lg">
+                    Create a link. Share it. Let Claude handle the question they
+                    probably could have asked themselves.
+                  </p>
+                </div>
               </div>
-              <div className="space-y-3">
-                <h1 className="text-balance font-display text-4xl leading-[0.92] font-semibold tracking-[-0.035em] text-foreground sm:text-5xl md:text-6xl lg:text-7xl">
-                  Let me Claude it for you
-                </h1>
-                <p className="mx-auto max-w-xl text-base leading-7 text-muted-foreground sm:text-lg">
-                  Create a link. Share it. Let Claude handle the question they
-                  probably could have asked themselves.
-                </p>
-              </div>
-            </div>
 
-            <Alert className="animate-rise-delayed soft-card grain mx-auto max-w-lg rounded-[1.45rem] border-border/70 bg-card/70 text-left shadow-[0_18px_50px_rgba(62,43,31,0.08)] backdrop-blur-md">
-              <StarburstIcon className="mt-0.5 size-4 text-primary" />
-              <AlertTitle className="text-[0.72rem] font-semibold tracking-[0.16em] uppercase">
-                Unofficial fan tool
-              </AlertTitle>
-              <AlertDescription className="leading-6">
-                {siteConfig.shortDisclaimer} {siteConfig.privacyNote}
-              </AlertDescription>
-            </Alert>
-          </div>
+              <Alert className="animate-rise-delayed soft-card grain mx-auto max-w-lg rounded-[1.45rem] border-border/70 bg-card/70 text-left shadow-[0_18px_50px_rgba(62,43,31,0.08)] backdrop-blur-md">
+                <StarburstIcon className="mt-0.5 size-4 text-primary" />
+                <AlertTitle className="text-[0.72rem] font-semibold tracking-[0.16em] uppercase">
+                  Unofficial fan tool
+                </AlertTitle>
+                <AlertDescription className="leading-6">
+                  {siteConfig.shortDisclaimer} {siteConfig.privacyNote}
+                </AlertDescription>
+              </Alert>
+            </div>
+          )}
 
           <motion.div className="w-full min-h-[420px]" layout>
             <AnimatePresence mode="wait">
@@ -234,7 +236,7 @@ function App() {
             </AnimatePresence>
           </motion.div>
 
-          <HowItWorks />
+          {pageMode !== 'playback' && <HowItWorks />}
         </section>
       </main>
       <Footer />

@@ -115,9 +115,9 @@ export function Playback({
           timers.push(
             window.setTimeout(() => {
               window.location.replace(buildClaudeUrl(prompt))
-            }, 340),
+            }, 1000),
           )
-        }, showRefusal ? 520 : 260),
+        }, showRefusal ? 520 : 1500),
       )
     }
 
@@ -141,11 +141,11 @@ export function Playback({
           Playback mode
         </Badge>
         <CardTitle className="font-display text-3xl font-semibold tracking-[-0.02em]">
-          Someone has an answer for you
+          Someone thought Claude could answer this better
         </CardTitle>
         <CardDescription className="text-sm leading-6">
-          They just thought Claude could explain it better. You'll be redirected
-          shortly.
+          They sent you here instead of explaining it themselves. You'll be
+          redirected shortly.
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-5">
