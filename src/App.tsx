@@ -15,13 +15,13 @@ import { ShareActions } from '@/components/share-actions'
 import { StarburstIcon } from '@/components/starburst-icon'
 import { TopBar } from '@/components/top-bar'
 import { buildClaudeUrl } from '@/lib/claude'
-import { buildShareUrl, getPromptFromSearch, sanitizePrompt } from '@/lib/url'
+import { buildShareUrl, getPromptFromUrl, sanitizePrompt } from '@/lib/url'
 import { siteConfig } from '@/site-config'
 
 type PageMode = 'compose' | 'share' | 'playback'
 
 function App() {
-  const initialPrompt = getPromptFromSearch(window.location.search)
+  const initialPrompt = getPromptFromUrl(window.location.search, window.location.hash)
   const [draftPrompt, setDraftPrompt] = useState(initialPrompt ?? '')
   const [activePrompt, setActivePrompt] = useState(initialPrompt)
   const [pageMode, setPageMode] = useState<PageMode>(
@@ -31,7 +31,7 @@ function App() {
 
   useEffect(() => {
     const onPopState = () => {
-      const prompt = getPromptFromSearch(window.location.search)
+      const prompt = getPromptFromUrl(window.location.search, window.location.hash)
 
       setActivePrompt(prompt)
       setDraftPrompt(prompt ?? '')
