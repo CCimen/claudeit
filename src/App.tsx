@@ -4,7 +4,6 @@ import { toast } from 'sonner'
 
 import { ArrowDownIcon } from 'lucide-react'
 
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Composer } from '@/components/composer'
 import { ExamplePrompts } from '@/components/example-prompts'
