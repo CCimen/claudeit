@@ -141,11 +141,11 @@ export function Playback({
           Playback mode
         </Badge>
         <CardTitle className="font-display text-3xl font-semibold tracking-[-0.02em]">
-          Someone wanted you to ask Claude this
+          Someone has an answer for you
         </CardTitle>
         <CardDescription className="text-sm leading-6">
-          Short show, then a redirect. You will need a Claude account to finish
-          the job.
+          They just thought Claude could explain it better. You'll be redirected
+          shortly.
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-5">
