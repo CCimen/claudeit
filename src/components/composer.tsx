@@ -85,7 +85,7 @@ export function Composer({
         </div>
         {isComposeMode ? (
           <Button
-            className="group/btn transition-transform active:scale-[0.97] hover:shadow-lg sm:min-w-52"
+            className="group/btn h-10 w-full transition-transform active:scale-[0.97] hover:shadow-lg sm:w-auto sm:min-w-56 sm:px-6"
             onClick={onSubmit}
             title="Submit (Cmd+Enter)"
           >

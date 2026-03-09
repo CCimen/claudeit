@@ -109,7 +109,8 @@ export function HandoffPreview({ compact = false, isPaused = false }: HandoffPre
   return (
     <motion.div
       animate={{ opacity: 1, y: 0 }}
-      className={compact ? 'w-full' : 'w-full max-w-xl'}
+      aria-hidden="true"
+      className={compact ? 'w-full pointer-events-none select-none opacity-85' : 'w-full max-w-xl'}
       initial={{ opacity: 0, y: 18 }}
       transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
     >

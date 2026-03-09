@@ -2,7 +2,10 @@ import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { toast } from 'sonner'
 
+import { ArrowDownIcon } from 'lucide-react'
+
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { Button } from '@/components/ui/button'
 import { Composer } from '@/components/composer'
 import { ExamplePrompts } from '@/components/example-prompts'
 import { Footer } from '@/components/footer'
@@ -70,6 +73,10 @@ function App() {
     } catch {
       toast.success('Share link ready.')
     }
+
+    setTimeout(() => {
+      document.getElementById('share-actions')?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }, 100)
   }
 
   const handleEdit = () => {
@@ -142,15 +149,22 @@ function App() {
                 </div>
               </div>
 
-              <Alert className="animate-rise-delayed soft-card grain mx-auto max-w-lg rounded-[1.45rem] border-border/70 bg-card/70 text-left shadow-[0_18px_50px_rgba(62,43,31,0.08)] backdrop-blur-md">
-                <StarburstIcon className="mt-0.5 size-4 text-primary" />
-                <AlertTitle className="text-[0.72rem] font-semibold tracking-[0.16em] uppercase">
-                  Unofficial fan tool
-                </AlertTitle>
-                <AlertDescription className="leading-6">
-                  {siteConfig.shortDisclaimer} {siteConfig.privacyNote}
-                </AlertDescription>
-              </Alert>
+              <Button
+                className="animate-rise-delayed transition-transform active:scale-[0.97] hover:shadow-lg sm:min-w-52"
+                onClick={() => {
+                  document.getElementById('composer')?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+                  setTimeout(() => {
+                    document.querySelector<HTMLTextAreaElement>('#composer textarea')?.focus()
+                  }, 500)
+                }}
+              >
+                Start writing
+                <ArrowDownIcon className="size-4" data-icon="inline-end" />
+              </Button>
+
+              <p className="animate-rise-delayed mx-auto max-w-lg text-center text-xs leading-5 text-muted-foreground/70">
+                {siteConfig.shortDisclaimer} {siteConfig.privacyNote}
+              </p>
             </div>
           )}
 
@@ -180,7 +194,7 @@ function App() {
                   initial={{ opacity: 0, y: 20 }}
                   transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
                 >
-                  <motion.div className="group/merged" layout>
+                  <motion.div className="group/merged" id="composer" layout>
                     <HandoffPreview compact isPaused={composerFocused} />
                     <div className="mx-5 border-t border-dashed border-border/50 sm:mx-6" />
                     <Composer
@@ -215,6 +229,7 @@ function App() {
                         key="share-actions"
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -12 }}
+                        id="share-actions"
                         initial={{ opacity: 0, y: 16 }}
                         transition={{ duration: 0.3 }}
                       >
