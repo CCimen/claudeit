@@ -3,6 +3,7 @@
 @import "shadcn/tailwind.css";
 
 @custom-variant dark (&:is(.dark *));
+@custom-variant landscape (@media (orientation: landscape));
 
 :root {
   --font-sans: "Plus Jakarta Sans", sans-serif;
@@ -18,7 +19,7 @@
   --secondary: oklch(0.94 0.012 73.02);
   --secondary-foreground: oklch(0.36 0.025 43.38);
   --muted: oklch(0.944 0.011 73.02);
-  --muted-foreground: oklch(0.50 0.027 55.84);
+  --muted-foreground: oklch(0.45 0.027 55.84);
   --accent: oklch(0.954 0.018 65.19);
   --accent-foreground: oklch(0.329 0.025 44.64);
   --destructive: oklch(0.63 0.19 24.72);
@@ -83,6 +84,33 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+@keyframes cta-ready {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 0 rgba(198, 100, 66, 0),
+      0 4px 14px rgba(62, 43, 31, 0.06);
+  }
+
+  50% {
+    box-shadow:
+      0 0 18px 2px rgba(198, 100, 66, 0.15),
+      0 4px 14px rgba(62, 43, 31, 0.06);
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @keyframes rise-in {
   from {
     opacity: 0;
@@ -103,6 +131,41 @@
 
   50% {
     transform: translateY(-6px);
+  }
+}
+
+@keyframes ray-breathe {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.45;
+  }
+}
+
+@keyframes starburst-spin {
+  to {
+    rotate: 360deg;
+  }
+}
+
+@keyframes particle-drift {
+  0% {
+    translate: 0 0;
+    opacity: 0;
+    scale: 1;
+  }
+
+  10% {
+    opacity: 0.6;
+  }
+
+  100% {
+    translate: 0 -32px;
+    opacity: 0;
+    scale: 0;
   }
 }
 
@@ -127,6 +190,10 @@
     -webkit-tap-highlight-color: transparent;
   }
 
+  :root.aurora-active body {
+    background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0));
+  }
+
   @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
@@ -145,6 +212,7 @@
 @layer components {
   .page-shell {
     @apply relative overflow-hidden;
+    isolation: isolate;
   }
 
   .page-shell::before {
@@ -175,6 +243,11 @@
     opacity: 0.9;
     pointer-events: none;
     z-index: -1;
+  }
+
+  /* Hide static glow when canvas aurora is rendering */
+  :root.aurora-active .ambient-glow::after {
+    display: none;
   }
 
   .soft-card {
@@ -233,5 +306,25 @@
 
   .animate-ornament {
     animation: slow-drift 8s ease-in-out infinite;
+  }
+
+  .animate-cta-ready {
+    animation: cta-ready 2.8s ease-in-out infinite;
+  }
+
+  .animate-fade-up {
+    animation: fade-up 420ms cubic-bezier(0.2, 1, 0.32, 1) both;
+  }
+
+  .starburst-rotate {
+    animation: starburst-spin 90s linear infinite;
+  }
+
+  .ray-breathe {
+    animation: ray-breathe 3.5s ease-in-out infinite;
+  }
+
+  .particle-drift {
+    animation: particle-drift 4s ease-out infinite;
   }
 }

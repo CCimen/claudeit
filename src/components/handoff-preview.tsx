@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { ArrowUpRightIcon, GlobeIcon, SparklesIcon } from 'lucide-react'
+import { GlobeIcon } from 'lucide-react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 
 import { StarburstIcon } from '@/components/starburst-icon'
@@ -7,9 +7,6 @@ import { Badge } from '@/components/ui/badge'
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
 } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 
@@ -103,49 +100,31 @@ export function HandoffPreview({ compact = false, isPaused = false }: HandoffPre
   }, [cycleKey, shouldReduceMotion, isPaused])
 
   const cardClassName = compact
-    ? 'soft-card grain overflow-hidden rounded-t-[2rem] rounded-b-none border border-b-0 border-border/70 bg-card/92'
-    : 'soft-card grain overflow-hidden rounded-[2rem] border border-border/70 bg-card/92'
+    ? 'soft-card grain overflow-hidden rounded-t-2xl sm:rounded-t-[2rem] rounded-b-none border border-b-0 border-border/70 bg-card/92'
+    : 'soft-card grain overflow-hidden rounded-2xl sm:rounded-[2rem] border border-border/70 bg-card/92'
 
   return (
     <motion.div
-      animate={{ opacity: 1, y: 0 }}
+      {...(compact
+        ? { animate: { opacity: 1, y: 0 } }
+        : { whileInView: { opacity: 1, y: 0 }, viewport: { once: true, margin: '-60px' } }
+      )}
       aria-hidden="true"
-      className={compact ? 'w-full pointer-events-none select-none opacity-85' : 'w-full max-w-xl'}
+      className={compact ? 'w-full pointer-events-none select-none opacity-85' : 'mx-auto w-full max-w-5xl'}
       initial={{ opacity: 0, y: 18 }}
       transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
     >
       <Card className={cardClassName}>
-        {!compact ? (
-          <CardHeader className="gap-3 text-left">
-            <Badge
-              variant="secondary"
-              className="w-fit rounded-full border border-border/60 bg-white/70 px-3 py-1 text-[0.68rem] tracking-[0.16em] text-muted-foreground uppercase"
-            >
-              Live preview
-            </Badge>
-            <CardTitle className="font-display text-3xl font-semibold tracking-[-0.02em]">
-              What the handoff feels like
-            </CardTitle>
-            <CardDescription className="max-w-md leading-6">
-              A small preview of the link landing, the typed prompt, and the push
-              toward Claude.
-            </CardDescription>
-          </CardHeader>
-        ) : (
-          <div className="flex items-center justify-between px-4 pt-4 sm:px-5 sm:pt-5">
-            <Badge
-              variant="secondary"
-              className="rounded-full border border-border/60 bg-white/70 px-3 py-1 text-[0.68rem] tracking-[0.16em] text-muted-foreground uppercase"
-            >
-              Live preview
-            </Badge>
-            <span className="text-xs text-muted-foreground/60">What the handoff feels like</span>
-          </div>
-        )}
+        <div className={`flex items-center justify-between ${compact ? 'px-4 pt-4 sm:px-5 sm:pt-5' : 'px-5 pt-5 sm:px-6 sm:pt-6'}`}>
+          <span className="editorial-label text-[0.68rem] text-muted-foreground">
+            Live preview
+          </span>
+          <span className="hidden text-sm text-muted-foreground sm:inline">What the recipient sees</span>
+        </div>
         <CardContent className={compact ? 'flex flex-col gap-3 p-4 sm:p-5' : 'flex flex-col gap-4'}>
           <motion.div
             animate={{ y: 0, opacity: 1 }}
-            className="overflow-hidden rounded-[1.7rem] border border-border/70 bg-[#f7f1ea] shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]"
+            className="overflow-hidden rounded-xl sm:rounded-[1.7rem] border border-border/70 bg-[#f7f1ea] shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]"
             initial={{ y: 14, opacity: 0 }}
             layout
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
@@ -162,19 +141,16 @@ export function HandoffPreview({ compact = false, isPaused = false }: HandoffPre
               </div>
             </div>
 
-            <div className={compact ? 'flex min-h-[230px] flex-col gap-3 p-3 sm:p-4' : 'flex flex-col gap-4 p-4'}>
+            <div className={compact ? 'flex min-h-[230px] flex-col gap-3 p-3 sm:p-4' : 'flex flex-col gap-3 p-3 sm:gap-4 sm:p-4'}>
               <div className="flex items-center justify-between gap-3">
-                <Badge
-                  variant="outline"
-                  className="rounded-full bg-white/70 px-3 py-1 text-[0.68rem] tracking-[0.16em] uppercase"
-                >
+                <span className="editorial-label text-[0.68rem] text-muted-foreground">
                   Browser preview
-                </Badge>
+                </span>
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={status}
                     animate={{ opacity: 1, y: 0 }}
-                    className="text-xs text-muted-foreground"
+                    className="text-xs text-muted-foreground sm:text-sm"
                     exit={{ opacity: 0, y: -8 }}
                     initial={{ opacity: 0, y: 8 }}
                     transition={{ duration: 0.28 }}
@@ -188,14 +164,14 @@ export function HandoffPreview({ compact = false, isPaused = false }: HandoffPre
 
               <motion.div
                 animate={{ scale: status === 'handoff' ? 0.985 : 1 }}
-                className="rounded-[1.4rem] border border-border/65 bg-white/70 p-4"
+                className="rounded-lg sm:rounded-[1.4rem] border border-border/65 bg-white/70 p-3 sm:p-4"
                 layout
                 transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
               >
                 <div className="mb-3 flex items-center justify-between gap-3">
                   <div className="flex items-center gap-2 text-sm font-medium text-foreground">
                     <StarburstIcon className="size-4 text-primary" />
-                    Claude handoff
+                    Claude redirect
                   </div>
                   <Badge
                     variant="secondary"
@@ -207,7 +183,7 @@ export function HandoffPreview({ compact = false, isPaused = false }: HandoffPre
                 <div
                   aria-atomic="true"
                   aria-live="polite"
-                  className={`rounded-[1.1rem] border border-border/60 bg-background/80 px-4 py-3 text-left text-sm leading-6 text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.7)] ${compact ? 'min-h-[80px]' : 'min-h-[118px]'}`}
+                  className={`rounded-lg sm:rounded-[1.1rem] border border-border/60 bg-background/80 px-3 py-2.5 sm:px-4 sm:py-3 text-left text-sm leading-6 text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.7)] ${compact ? 'min-h-[80px]' : 'min-h-[72px] sm:min-h-[118px]'}`}
                 >
                   {displayText || (
                     <span className="text-muted-foreground">
@@ -229,7 +205,7 @@ export function HandoffPreview({ compact = false, isPaused = false }: HandoffPre
                   <motion.div
                     key={step}
                     animate={{ opacity: 1, y: 0 }}
-                    className={`shrink-0 snap-start rounded-[1.1rem] border border-border/60 bg-white/60 text-left text-xs text-muted-foreground sm:min-w-0 sm:shrink ${compact ? 'min-w-[140px] px-3 py-2' : 'min-w-[140px] px-3 py-2'}`}
+                    className={`shrink-0 snap-start rounded-lg sm:rounded-[1.1rem] border border-border/60 bg-white/60 text-left text-xs text-muted-foreground sm:min-w-0 sm:shrink ${compact ? 'min-w-[140px] px-3 py-2' : 'min-w-[120px] px-2.5 py-2 sm:min-w-[140px] sm:px-3'}`}
                     initial={{ opacity: 0, y: 12 }}
                     transition={{
                       delay: shouldReduceMotion ? 0 : 0.08 * index,
@@ -246,24 +222,6 @@ export function HandoffPreview({ compact = false, isPaused = false }: HandoffPre
             </div>
           </motion.div>
 
-          {!compact && (
-            <div className="flex flex-wrap gap-2">
-              <Badge
-                variant="outline"
-                className="rounded-full bg-white/65 px-3 py-1 text-muted-foreground"
-              >
-                <SparklesIcon data-icon="inline-start" />
-                Smooth landing
-              </Badge>
-              <Badge
-                variant="outline"
-                className="rounded-full bg-white/65 px-3 py-1 text-muted-foreground"
-              >
-                <ArrowUpRightIcon data-icon="inline-start" />
-                Claude opens prefilled
-              </Badge>
-            </div>
-          )}
         </CardContent>
       </Card>
     </motion.div>

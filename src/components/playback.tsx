@@ -3,7 +3,6 @@ import { CopyIcon, ExternalLinkIcon, RotateCcwIcon } from 'lucide-react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 
 import { StarburstIcon } from '@/components/starburst-icon'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -11,7 +10,6 @@ import {
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
 } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { Textarea } from '@/components/ui/textarea'
@@ -22,6 +20,11 @@ const statusLines = [
   'This is still faster than another team thread.',
   'Let Claude do the heavy lifting for once.',
   'A friend wanted you to take the hint.',
+  'Faster than waiting for someone to google it.',
+  'Someone believed in your potential to self-serve.',
+  'Think of it as guided self-help.',
+  'They could have just told you, but here we are.',
+  'Delegating with style since 2025.',
 ]
 
 const refusalMessage =
@@ -132,31 +135,28 @@ export function Playback({
       initial={{ opacity: 0, y: 18 }}
       transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
     >
-      <Card className="soft-card grain mx-auto w-full max-w-5xl rounded-[2rem] border border-border/70 bg-card/90">
+      <Card className="soft-card grain mx-auto w-full max-w-5xl rounded-2xl sm:rounded-[2rem] border border-border/70 bg-card/90">
       <CardHeader className="gap-3 text-left">
-        <Badge
-          variant="secondary"
-          className="w-fit rounded-full border border-border/60 bg-white/70 px-3 py-1 text-[0.68rem] tracking-[0.16em] text-muted-foreground uppercase"
-        >
-          Playback mode
-        </Badge>
-        <CardTitle className="font-display text-3xl font-semibold tracking-[-0.02em]">
+        <span className="editorial-label text-[0.68rem] text-muted-foreground">
+          Incoming question
+        </span>
+        <h2 className="font-display text-3xl font-semibold tracking-[-0.02em]">
           Someone thought Claude could answer this better
-        </CardTitle>
+        </h2>
         <CardDescription className="text-sm leading-6">
           They sent you here instead of explaining it themselves. You'll be
-          redirected shortly.
+          redirected to Claude shortly.
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-5">
         <motion.div
           animate={{ scale: phase === 'opening' ? 0.99 : 1 }}
-          className="rounded-[1.6rem] border border-border/70 bg-background/70 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.72)]"
+          className="rounded-xl sm:rounded-[1.6rem] border border-border/70 bg-background/70 p-3 sm:p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.72)]"
           layout
           transition={{ duration: 0.35 }}
         >
           <Textarea
-            className="min-h-[220px] resize-none border-0 bg-transparent px-1 py-1 text-base leading-7 shadow-none focus-visible:ring-0 md:text-base"
+            className="min-h-[120px] sm:min-h-[220px] resize-none border-0 bg-transparent px-1 py-1 text-base leading-7 shadow-none focus-visible:ring-0 md:text-base"
             readOnly
             value={displayText}
           />
@@ -199,7 +199,7 @@ export function Playback({
           </div>
         </div>
         <p className="text-left text-sm leading-6 text-muted-foreground">
-          If nothing happens, use the manual button above.
+          If the redirect doesn't work, click "Open in Claude" above.
         </p>
       </CardFooter>
       </Card>

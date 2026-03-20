@@ -2,21 +2,42 @@ import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { toast } from 'sonner'
 
-import { ArrowDownIcon } from 'lucide-react'
-
-import { Button } from '@/components/ui/button'
+import { AuroraBackground } from '@/components/aurora-background'
 import { Composer } from '@/components/composer'
 import { ExamplePrompts } from '@/components/example-prompts'
 import { Footer } from '@/components/footer'
 import { HandoffPreview } from '@/components/handoff-preview'
-import { HowItWorks } from '@/components/how-it-works'
 import { Playback } from '@/components/playback'
 import { ShareActions } from '@/components/share-actions'
-import { StarburstIcon } from '@/components/starburst-icon'
+import { HeroStarburst } from '@/components/hero-starburst'
 import { TopBar } from '@/components/top-bar'
 import { buildClaudeUrl } from '@/lib/claude'
+import { burstConfetti } from '@/lib/confetti'
 import { buildShareUrl, getPromptFromUrl, sanitizePrompt } from '@/lib/url'
 import { siteConfig } from '@/site-config'
+
+function pick<T>(items: T[]): T {
+  return items[Math.floor(Math.random() * items.length)]!
+}
+
+const shareCopiedToasts = [
+  'Link copied. Go forth and delegate.',
+  'Copied! Time to hit send and walk away.',
+  'Link in your clipboard. Their problem now.',
+  'Copied. Claude will take it from here.',
+  'Link ready. You\'re doing them a favor, really.',
+]
+
+const linkCopiedToasts = [
+  'Copied again. They must really need the hint.',
+  'Share link copied.',
+  'Got it. Go paste it somewhere meaningful.',
+]
+
+const promptCopiedToasts = [
+  'Prompt copied.',
+  'Copied. Do with it what you will.',
+]
 
 type PageMode = 'compose' | 'share' | 'playback'
 
@@ -28,6 +49,15 @@ function App() {
     initialPrompt ? 'playback' : 'compose',
   )
   const [composerFocused, setComposerFocused] = useState(false)
+  const [starburstFlare, setStarburstFlare] = useState(false)
+
+  useEffect(() => {
+    if (pageMode === 'compose' && window.matchMedia('(min-width: 768px)').matches) {
+      setTimeout(() => {
+        document.querySelector<HTMLTextAreaElement>('#composer textarea')?.focus()
+      }, 800)
+    }
+  }, [])
 
   useEffect(() => {
     const onPopState = () => {
@@ -66,11 +96,16 @@ function App() {
     setPageMode('share')
     syncPromptToUrl(prompt)
 
+    setStarburstFlare(true)
+    setTimeout(() => setStarburstFlare(false), 600)
+
+    burstConfetti()
+
     try {
       await navigator.clipboard.writeText(shareUrl)
-      toast.success('Share link copied to clipboard.')
+      toast.success(pick(shareCopiedToasts))
     } catch {
-      toast.success('Share link ready.')
+      toast.success('Link ready — copy it from the page below.')
     }
 
     setTimeout(() => {
@@ -87,6 +122,10 @@ function App() {
 
   const handleChooseExample = (prompt: string) => {
     setDraftPrompt(prompt)
+    document.getElementById('composer')?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    setTimeout(() => {
+      document.querySelector<HTMLTextAreaElement>('#composer textarea')?.focus()
+    }, 300)
   }
 
   const handleCopyShareLink = async () => {
@@ -97,7 +136,7 @@ function App() {
     await navigator.clipboard.writeText(
       buildShareUrl(activePrompt, window.location.origin),
     )
-    toast.success('Share link copied.')
+    toast.success(pick(linkCopiedToasts))
   }
 
   const handleCopyPrompt = async () => {
@@ -106,7 +145,7 @@ function App() {
     }
 
     await navigator.clipboard.writeText(activePrompt)
-    toast.success('Prompt copied.')
+    toast.success(pick(promptCopiedToasts))
   }
 
   const handleOpenClaude = () => {
@@ -119,6 +158,7 @@ function App() {
 
   return (
     <div className="page-shell ambient-glow">
+      <AuroraBackground />
       <a
         className="sr-only font-medium focus:not-sr-only focus:absolute focus:z-50 focus:rounded-br-lg focus:bg-background focus:px-4 focus:py-2 focus:text-foreground"
         href="#main-content"
@@ -130,12 +170,16 @@ function App() {
         className="mx-auto flex min-h-screen w-full max-w-[1600px] flex-col px-4 pb-12 pt-6 sm:px-8 xl:px-12 2xl:px-16"
         id="main-content"
       >
-        <section className="mx-auto flex w-full max-w-5xl flex-1 flex-col items-center pt-8 text-center sm:pt-12 xl:pt-14">
+        <section className="mx-auto flex w-full max-w-5xl flex-1 flex-col items-center pt-4 text-center sm:pt-12 xl:pt-14 landscape:pt-4 landscape:sm:pt-12">
           {pageMode !== 'playback' && (
-            <div className="mx-auto mb-8 flex max-w-3xl flex-col items-center gap-4 sm:mb-10">
+            <div className="mx-auto mb-6 flex max-w-3xl flex-col items-center gap-3 sm:mb-10 sm:gap-4">
               <div className="animate-rise flex flex-col items-center gap-4">
-                <div className="animate-ornament flex size-16 items-center justify-center rounded-full border border-primary/20 bg-primary/10 text-primary shadow-[0_14px_40px_rgba(198,100,66,0.18)]">
-                  <StarburstIcon className="size-8" />
+                <div className="animate-ornament flex size-16 items-center justify-center overflow-visible rounded-full border border-primary/20 bg-primary/10 text-primary shadow-[0_14px_40px_rgba(198,100,66,0.18)]">
+                  <HeroStarburst
+                    className="size-8"
+                    flare={starburstFlare}
+                    promptLength={draftPrompt.length}
+                  />
                 </div>
                 <div className="space-y-3">
                   <h1 className="text-balance font-display text-4xl leading-[0.92] font-semibold tracking-[-0.035em] text-foreground sm:text-5xl md:text-6xl lg:text-7xl">
@@ -147,19 +191,6 @@ function App() {
                   </p>
                 </div>
               </div>
-
-              <Button
-                className="animate-rise-delayed transition-transform active:scale-[0.97] hover:shadow-lg sm:min-w-52"
-                onClick={() => {
-                  document.getElementById('composer')?.scrollIntoView({ behavior: 'smooth', block: 'center' })
-                  setTimeout(() => {
-                    document.querySelector<HTMLTextAreaElement>('#composer textarea')?.focus()
-                  }, 500)
-                }}
-              >
-                Start writing
-                <ArrowDownIcon className="size-4" data-icon="inline-end" />
-              </Button>
 
               <p className="animate-rise-delayed mx-auto max-w-lg text-center text-xs leading-5 text-muted-foreground/70">
                 {siteConfig.shortDisclaimer} {siteConfig.privacyNote}
@@ -193,11 +224,8 @@ function App() {
                   initial={{ opacity: 0, y: 20 }}
                   transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
                 >
-                  <motion.div className="group/merged" id="composer" layout>
-                    <HandoffPreview compact isPaused={composerFocused} />
-                    <div className="mx-5 border-t border-dashed border-border/50 sm:mx-6" />
+                  <div id="composer">
                     <Composer
-                      attached
                       mode={pageMode === 'share' ? 'share' : 'compose'}
                       onFocusChange={setComposerFocused}
                       onPromptChange={setDraftPrompt}
@@ -206,7 +234,7 @@ function App() {
                         pageMode === 'compose' ? draftPrompt : activePrompt ?? ''
                       }
                     />
-                  </motion.div>
+                  </div>
 
                   <AnimatePresence>
                     {pageMode === 'compose' ? (
@@ -245,12 +273,17 @@ function App() {
                       </motion.div>
                     ) : null}
                   </AnimatePresence>
+
+                  {pageMode === 'compose' && (
+                    <div className="mt-10">
+                      <HandoffPreview isPaused={composerFocused} />
+                    </div>
+                  )}
                 </motion.div>
               )}
             </AnimatePresence>
           </motion.div>
 
-          {pageMode !== 'playback' && <HowItWorks />}
         </section>
       </main>
       <Footer />
